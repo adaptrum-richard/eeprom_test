@@ -47,7 +47,7 @@ static ioctl_st *ioctl_st_init(void)
         return NULL;
     }
 
-    iocs->msgs[1].buf = malloc(EEPROM_PAGE_SIZE + 1);
+    iocs->msgs[1].buf = malloc(EEPROM_PAGE_SIZE + 2);
     if (!(iocs->msgs[1].buf)) {
         perror("malloc iocs->msgs[1].buf");
         return NULL;
@@ -75,7 +75,7 @@ static void page_read_st_gen(ioctl_st *iocs, eeprom_st *eeps)
     /* 第1次信号 */
     iocs->msgs[0].addr = eeps->slave_addr;  //填入slave_addr
     iocs->msgs[0].flags = I2C_M_WR;         //write标志
-    iocs->msgs[0].len = 2;                  //信号长度1字节
+    iocs->msgs[0].len = 2;                  //信号长度2字节
     iocs->msgs[0].buf[0] = (eeps->byte_addr >> 8) & 0xff; //填入高8byte_addr
     iocs->msgs[0].buf[1] = eeps->byte_addr & 0xff; //填入低byte_addr
 
@@ -195,10 +195,10 @@ int eeprom_page_write(u16 pos, u8 *data, int size)
     }
 
     /* 判断要读取数据的长度size有效性 */
-    if (size > 16)
-        size = 16;
-    else if (size < 1)
-        return 0;
+    //if (size > 16)
+    //    size = 16;
+    //else if (size < 1)
+    //    return 0;
 
     if (size > (EEPROM_SIZE - pos))
         size = EEPROM_SIZE - pos;
